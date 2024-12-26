@@ -1,0 +1,31 @@
+{
+        "Product added successfully":"تم ارسال الاغراض",
+        "Validation errors": "أخطاء في التحقق",
+        "User created successfully": "تم إنشاء المستخدم بنجاح",
+        "Login successful": "تم تسجيل الدخول بنجاح",
+        "invalde": "بيانات غير صحيحة",
+        "Logout successful": "تم تسجيل الخروج بنجاح",
+        "User not authenticated": "المستخدم غير مصدق",
+        "Product added to cart successfully": "تم إضافة المنتج إلى السلة بنجاح",
+    "Favorite removed successfully.": "تم إزالة المفضل بنجاح",
+
+        "Order created successfully": "تم إنشاء الطلب بنجاح",
+        "Error creating order": "حدث خطأ أثناء إنشاء الطلب",
+        "Cart items retrieved successfully for user": "تم استرجاع عناصر السلة بنجاح للمستخدم",
+        "Orders retrieved successfully.": "تم استرجاع الطلبات بنجاح",
+
+
+            "Order placed successfully": "تم وضع الطلب بنجاح",
+            "Order status updated": "تم تحديث حالة الطلب",
+            "Payment received": "تم استلام الدفع",
+            "Product out of stock": "المنتج غير متوفر",
+            "Invalid credentials": "بيانات الاعتماد غير صالحة",
+            "Email not found": "البريد الإلكتروني غير موجود",
+            "Password reset link sent": "تم إرسال رابط إعادة تعيين كلمة المرور",
+            "Account created successfully": "تم إنشاء الحساب بنجاح",
+            "Something went wrong": "حدث خطأ ما"
+
+
+
+
+}
