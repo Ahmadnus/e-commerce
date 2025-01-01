@@ -58,7 +58,9 @@ Route::prefix('cart')->middleware('auth:sanctum')->middleware(lang::class)->grou
 
 
 Route::prefix('orders')->middleware('auth:sanctum')->middleware(lang::class)->group(function () {
-    Route::post('/order', [OrderController::class, 'addOrder']); // Create an order
+    Route::post('/order', [OrderController::class, 'addOrder']);
+    Route::post('/update/{id}', [OrderController::class, 'updateOrder']);
+    Route::delete('delete/{id}', [OrderController::class, 'deleteOrder']);
     Route::get('/ordersh', [OrderController::class, 'getOrders']);
 });
 

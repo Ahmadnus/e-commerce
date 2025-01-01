@@ -137,4 +137,69 @@ if($coupon){
     ], 200);
 
 }
+public function updateOrder(Request $request, $id)
+{
+    $userId = Auth::id();
+
+    $order = Order::where('id', $id)->where('user_id', $userId)->first();
+
+    if (!$order) {
+        return response()->json([
+            "success" => false,
+            "msg" => trans("Order not found or unauthorized."),
+            "data" => null
+        ], 404);
+    }
+
+    try {
+
+        $order->update($request->only(['address_id', 'coupon_id']));
+
+        return response()->json([
+            "success" => true,
+            "msg" => trans("Order updated successfully."),
+            "data" => $order
+        ], 200);
+
+    } catch (Exception $e) {
+        return response()->json([
+            "success" => false,
+            "msg" => trans("Error updating order") . ": " . $e->getMessage(),
+            "data" => []
+        ], 500);
+    }
+}
+
+public function deleteOrder($id)
+{
+    $userId = Auth::id();
+
+    $order = Order::where('id', $id)->where('user_id', $userId)->first();
+
+    if (!$order) {
+        return response()->json([
+            "success" => false,
+            "msg" => trans("Order not found or unauthorized."),
+            "data" => null
+        ], 404);
+    }
+
+    try {
+        $order->delete();
+
+        return response()->json([
+            "success" => true,
+            "msg" => trans("Order deleted successfully."),
+            "data" => null
+        ], 200);
+
+    } catch (Exception $e) {
+        return response()->json([
+            "success" => false,
+            "msg" => trans("Error deleting order") . ": " . $e->getMessage(),
+            "data" => []
+        ], 500);
+    }
+}
+
 }
