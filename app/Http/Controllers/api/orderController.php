@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Cart;
+use App\Models\Coupon;
 use App\Models\OrderProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,13 +15,19 @@ use Illuminate\Support\Facades\Validator;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Http\Resources\OrderResource;
 
 class orderController extends Controller
 {
 
-    public function addOrder(Request $request)
+    public function addOrder(Request $request,)
     {
         try {
+
+
+            // Check if the coupon is valid
+
+
             $user = Auth::user()->id;
             $total = 0;
 
@@ -34,7 +41,11 @@ class orderController extends Controller
 
             $order = Order::create([
                 'user_id' => $user,
-                'total' => $total,
+                'total_price' => $total,
+                'address_id' => $request->add,
+            'discount' => 0,
+            'status' => 'pending',
+            'coupon_id' =>$request->copon,
             ]);
 
             foreach ($cartItems as $item) {
@@ -42,11 +53,44 @@ class orderController extends Controller
                 OrderProduct::create([
                     'order_id' => $order->id,
                     'product_id' => $item->product_id,
+
                     'quantity' => $item->quantity,
                     'price' => $item->product->price,
+
                 ]);
 
             }
+
+
+            $coupon = Coupon::where('id',$request->copon)->first();
+
+if($coupon){
+
+    if ($coupon->isValid()) {
+
+
+
+        $discountAmount = $coupon->discount_type == 'percentage'
+            ? $total * ($coupon->discount_value / 100)
+            : $coupon->discount_value;
+
+
+        $discountAmount = min($discountAmount, $total);
+
+
+        $order->update([
+            'coupon_id' => $coupon->id,
+            'discount' => $discountAmount,
+            'total_price' => $total - $discountAmount,
+        ]);
+
+   $coupon->usage_count += 1;
+   $coupon->usage_limit -= 1;
+   $coupon->save();
+
+    }
+}
+
 
             Cart::userId()->delete();
             $lang=app()->getLocale();
@@ -69,32 +113,28 @@ class orderController extends Controller
     }
 
     public function getOrders()
-    {
-        $user = Auth::user()->id;
-        $orders = Order::where('user_id', $user)
-            ->with('orderProducts.product')
-            ->get()->map(function ($order) {
+{
+    $userId = Auth::id();
 
-                return [
-                    'order_id' => $order->id,
-                    'order_total' => $order->total,
-                    'order_date' => $order->created_at->toFormattedDateString(),
-                    'products' => $order->orderProducts->map(function ($orderProduct) {
-                        return [
-                            'product_id' => $orderProduct->product->id,
-                            'product_name' => $orderProduct->product->name,
-                            'product_price' => $orderProduct->product->price,
-                            'quantity' => $orderProduct->quantity,
-                            'total_price' => $orderProduct->quantity * $orderProduct->product->price,
-                        ];
-                    }),
-                ];
-            });
-            $lang=app()->getLocale();
+    if (!$userId) {
         return response()->json([
-            "success" => true,
-            "msg" => trans("Orders retrieved successfully."),
-            "data" => $orders
-        ], 200);
+            "success" => false,
+            "msg" => trans("Unauthorized: You must be logged in."),
+            "data" => null
+        ], 401);
     }
+
+    $user = Auth::user()->id;
+    $orders = Order::where('user_id', $user)
+        ->with('orderProducts.product')
+        ->get();
+    $lang = app()->getLocale();
+
+    return response()->json([
+        "success" => true,
+        "msg" => trans("Orders retrieved successfully.", [], $lang),
+        "data" => OrderResource::collection($orders),
+    ], 200);
+
+}
 }

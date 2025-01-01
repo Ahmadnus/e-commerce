@@ -23,7 +23,26 @@
             "Email not found": "البريد الإلكتروني غير موجود",
             "Password reset link sent": "تم إرسال رابط إعادة تعيين كلمة المرور",
             "Account created successfully": "تم إنشاء الحساب بنجاح",
-            "Something went wrong": "حدث خطأ ما"
+            "Something went wrong": "حدث خطأ ما",
+            "address_created" : "تم إنشاء العنوان بنجاح",
+            "address_updated" : "تم تحديث العنوان بنجاح",
+            "address_deleted" : "تم حذف العنوان بنجاح",
+            "address_not_found" : "العنوان غير موجود أو الوصول غير مصرح به",
+            "failed_to_create" : "فشل في إنشاء العنوان",
+            "failed_to_update" : "فشل في تحديث العنوان",
+            "failed_to_delete" : "فشل في حذف العنوان",
+            "something_went_wrong": "حدث خطأ ما",
+
+    "unauthorized login": "غير مصرح لك: يجب عليك تسجيل الدخول للقيام بهذا الإجراء",
+"unauthorized view coupons": "غير مصرح لك: فقط المسؤولين يمكنهم عرض الكوبونات",
+"coupon created successfully": "تم إنشاء الكوبون بنجاح",
+"error creating coupon": "حدث خطأ أثناء إنشاء الكوبون",
+"unauthorized create coupon": "غير مصرح لك: فقط المسؤولين يمكنهم إنشاء الكوبونات",
+"coupon updated successfully": "تم تحديث الكوبون بنجاح",
+"error updating coupon": "حدث خطأ أثناء تحديث الكوبون",
+"unauthorized update coupon": "غير مصرح لك: فقط المسؤولين يمكنهم تحديث الكوبونات",
+"coupon deleted successfully": "تم حذف الكوبون بنجاح",
+"error deleting coupon": "حدث خطأ أثناء حذف الكوبون"
 
 
 

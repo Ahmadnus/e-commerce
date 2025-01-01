@@ -19,7 +19,7 @@ class FavoriteController extends Controller
 {
     public function store(Request $request)
     {
-        // Validate the incoming request
+
         $validator = Validator::make($request->all(), [
             'favoritable_id' => 'required|integer',
             'favoritable_type' => 'required|string|in:App\Models\Product,App\Models\Category',
@@ -33,10 +33,10 @@ class FavoriteController extends Controller
             ], 422);
         }
 
-        DB::beginTransaction(); // Start the DB transaction
+        DB::beginTransaction();
 
         try {
-            // Check if the favorite already exists
+
             $exFavorite = Favorite::where('user_id', Auth::id())
                 ->where('favoritable_id', $request->favoritable_id)
                 ->where('favoritable_type', $request->favoritable_type)
@@ -50,19 +50,19 @@ class FavoriteController extends Controller
                 ], 409);
             }
 
-            // Create the new favorite
+
             $favorite = Favorite::create([
                 'user_id' => Auth::id(),
                 'favoritable_id' => $request->favoritable_id,
                 'favoritable_type' => $request->favoritable_type,
             ]);
 
-            // If the favoritable_type is a Product, send emails to users in the same category
+
             if ($request->favoritable_type == 'App\Models\Product') {
                 $this->sendEmailNotifications($request->favoritable_id);
             }
 
-            DB::commit(); // Commit the transaction
+            DB::commit();
 
             Log::info("Favorite created successfully for user " . Auth::id());
 
@@ -73,7 +73,7 @@ class FavoriteController extends Controller
             ], 200);
 
         } catch (Exception $e) {
-            DB::rollBack(); // Rollback the transaction on error
+            DB::rollBack();
 
             Log::error("Error occurred while creating favorite: " . $e->getMessage());
 

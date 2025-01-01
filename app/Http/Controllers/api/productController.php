@@ -18,39 +18,36 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\gg;
 use App\Mail\mass;
 use Illuminate\Support\Facades\Log;
+use App\Http\Resources\ProductResource;
 ;
 class productController extends Controller
 {
+
     public function index()
     {
         try {
+            $productPage = Product::with('category', 'media')->paginate(10);
 
-
-            $productPage = Product::with('category','media')->paginate(10);
             $pagination = [
-
-                            "current_page" => $productPage->currentPage(),
-                            "last_page" => $productPage->lastPage(),
-                            "per_page" => $productPage->perPage(),
+                "current_page" => $productPage->currentPage(),
+                "last_page" => $productPage->lastPage(),
+                "per_page" => $productPage->perPage(),
             ];
 
-                    return response()->json([
-                        "success" => true,
-                        "msg" => "Products displayed successfully",
-                        "data" => $productPage->items(),
-
-                        $pagination
-
-                    ], 200);
-
+            return response()->json([
+                "success" => true,
+                "msg" => "Products displayed successfully",
+                "data" => ProductResource::collection($productPage->items()),
+                "pagination" => $pagination,
+            ], 200);
         } catch (Exception $e) {
             return response()->json([
                 "success" => false,
-                "msg" =>  $e->getMessage(),
+                "msg" => $e->getMessage(),
                 "data" => [],
-
             ], 500);
         }
+
     }
 
     public function insert(Request $request)
@@ -63,7 +60,7 @@ class productController extends Controller
                 'price' => 'required|numeric|min:0',
                 'stock' => 'required|integer|min:0',
                 'category_id' => 'required|exists:categories,id',
- 'images' => 'required|file|mimes:jpg,jpeg,png,gif|max:2048'
+
             ]);
 
             if ($validator->fails()) {
@@ -85,6 +82,7 @@ class productController extends Controller
                     'stock' => $request->stock,
                     'category_id' => $request->category_id,
                     'user_id' => Auth::user()->id,
+                    'brand_id' =>$request->brand ,
 
                 ]);
                 $fileAdders = $product
